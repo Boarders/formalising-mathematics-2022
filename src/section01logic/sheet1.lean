@@ -43,7 +43,7 @@ letters like `P`, `Q`, `R` denote propositions
 (i.e. true/false statements) and variables whose names begin
 with `h` like `h1` or `hP` are proofs or hypotheses.
 
--/ 
+-/
 
 -- Throughout this sheet, `P`, `Q` and `R` will denote propositions.
 variables (P Q R : Prop)
@@ -57,7 +57,7 @@ begin
   exact hP,
 end
 
--- Assume `Q` is true. Prove that `P → Q`. 
+-- Assume `Q` is true. Prove that `P → Q`.
 example (hQ : Q) : P → Q :=
 begin
   -- The goal is of the form `X → Y` so we can use `intro`
@@ -89,7 +89,7 @@ using `intro`, `exact` and `apply`.
 /-- Every proposition implies itself. -/
 example : P → P :=
 begin
-  sorry
+  intro hP, exact hP,
 end
 
 /-
@@ -102,38 +102,38 @@ So if we write `P → Q → R` then we'd better know what this means.
 The convention in Lean is that it means `P → (Q → R)`. If you think
 about it, this means that to deduce `R` you will need to prove both `P`
 and `Q`. In general to prove `P1 → P2 → P3 → ... Pn` you can assume
-`P1`, `P2`,...,`P(n-1)` and then you have to prove `Pn`. 
+`P1`, `P2`,...,`P(n-1)` and then you have to prove `Pn`.
 
 So the next level is asking you prove that `P → (Q → P)`.
 
 -/
 example : P → Q → P :=
 begin
-  sorry
+  intros hP hQ, exact hP
 end
 
-/-- If we know `P`, and we also know `P → Q`, we can deduce `Q`. 
+/-- If we know `P`, and we also know `P → Q`, we can deduce `Q`.
 This is called "Modus Ponens" by logicians. -/
 example : P → (P → Q) → Q :=
 begin
-  sorry
+  intros hP hPQ, apply hPQ, exact hP
 end
 
 /-- `→` is transitive. That is, if `P → Q` and `Q → R` are true, then
   so is `P → R`. -/
 example : (P → Q) → (Q → R) → (P → R) :=
 begin
-  sorry,
+  intros hPQ hQR hP, apply hQR, apply hPQ, exact hP
 end
 
 -- If `h : P → Q → R` with goal `⊢ R` and you `apply h`, you'll get
 -- two goals! Note that tactics operate on only the first goal.
 example : (P → Q → R) → (P → Q) → (P → R) :=
 begin
-  sorry
+  intros hPQR hPQ hP, apply hPQR, exact hP, apply hPQ, exact hP
 end
 
-/- 
+/-
 
 Here are some harder puzzles. If you're not into logic puzzles
 and you feel like you understand `intro`, `exact` and `apply`
@@ -146,27 +146,28 @@ variables (S T : Prop)
 
 example : (P → R) → (S → Q) → (R → T) → (Q → R) → S → T :=
 begin
-  sorry
+  intros hPR hSQ hRT hQR hS, apply hRT, apply hQR, apply hSQ, apply hS
 end
 
 example : (P → Q) → ((P → Q) → P) → Q :=
 begin
-  sorry
+  intros hPQ hPQ_P, apply hPQ, apply hPQ_P, exact hPQ
 end
 
 example : ((P → Q) → R) → ((Q → R) → P) → ((R → P) → Q) → P :=
 begin
-  sorry
+  intros hPQ_R hQR_P hRP_Q, apply hQR_P, intros Q, apply hPQ_R, intros P, apply hRP_Q, intros R,
+  exact P
 end
 
 example : ((Q → P) → P) → (Q → R) → (R → P) → P :=
 begin
-  sorry
+  intros hQP_P hQR hRP, apply hQP_P, intros hQ, apply hRP, apply hQR, exact hQ
 end
 
 example : (((P → Q) → Q) → Q) → (P → Q) :=
 begin
-  sorry
+  intros hPQ_Q_Q hP, apply hPQ_Q_Q, intros hPQ, apply hPQ, exact hP,
 end
 
 example :
@@ -174,5 +175,5 @@ example :
   ((((P → P) → Q) → (P → P → Q)) → R) →
   (((P → P → Q) → ((P → P) → Q)) → R) → R :=
 begin
-  sorry
+  intros h1 h2 h3, apply h2, intros hPP_Q hP hP, apply hPP_Q, intros _, exact hP,
 end
