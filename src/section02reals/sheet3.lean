@@ -41,7 +41,7 @@ The reason we need to know about function notation for this sheet
 is that a sequence `x₀, x₁, x₂, …` of reals on this sheet will
 be encoded as a function from `ℕ` to `ℝ` sending `0` to `x₀`, `1` to `x₁`
 and so on.
- 
+
 ## Limit of a sequence.
 
 Here's the definition of the limit of a sequence.
@@ -55,7 +55,7 @@ def tendsto (a : ℕ → ℝ) (t : ℝ) : Prop :=
 /-
 
 We've made a definition, so it's our job to now make the API
-for the definition, i.e. prove some basic theorems about it. 
+for the definition, i.e. prove some basic theorems about it.
 -/
 
 -- If your goal is `tendsto a t` and you want to replace it with
@@ -69,7 +69,7 @@ end
 
 -- the eagle-eyed viewers amongst you might have spotted
 -- that `∀ ε > 0, ...` and `∀ ε, ε > 0 → ...` and `∀ ε, 0 < ε → ...`
--- are all definitionally equal, so `refl` sees through them. 
+-- are all definitionally equal, so `refl` sees through them.
 
 /-
 
@@ -84,13 +84,13 @@ but it can't do anything with it if it's a variable.
 /-- The limit of the constant sequence with value 37 is 37. -/
 theorem tendsto_thirtyseven : tendsto (λ n, 37) 37 :=
 begin
-  sorry,
+  intros _, intros ε, use 0, intros n pos, simp, assumption,
 end
 
 /-- The limit of the constant sequence with value `c` is `c`. -/
 theorem tendsto_const (c : ℝ) : tendsto (λ n, c) c :=
 begin
-  sorry,
+  intros _, intros ε, use 0, intros n pos, simp, assumption,
 end
 
 /-- If `a(n)` tends to `t` then `a(n) + c` tends to `t + c` -/
@@ -98,9 +98,14 @@ theorem tendsto_add_const {a : ℕ → ℝ} {t : ℝ} (c : ℝ)
   (h : tendsto a t) :
   tendsto (λ n, a n + c) (t + c) :=
 begin
-  sorry,
-  -- hints: make sure you know the maths proof!
-  -- use `cases` to deconstruct an `exists`
+  intros ε ε_pos,
+  specialize h ε ε_pos, cases h with B B_pf,
+  use B, intros n lower_n,
+  specialize B_pf n lower_n,
+  ring_nf,
+  apply B_pf,
+
+  -- hints: use `cases` to deconstruct an `exists`
   -- hypothesis, and `specialize` to specialize
   -- a `forall` hypothesis to specific values.
   -- Look up the explanations of these tactics in Part C
@@ -112,11 +117,18 @@ end
 example {a : ℕ → ℝ} {t : ℝ} (ha : tendsto a t) :
   tendsto (λ n, - a n) (-t) :=
 begin
-  sorry,
-  -- Try this one. Where do you get stuck?
-  -- The problem is that you probably don't
-  -- know any API for the absolute value function |.|.
-  -- We need to figure out how to prove |(-x)| = |x|,
-  -- or |a - b| = |b - a| or something like that.
-  -- Find out how in sheet 4.
+  intros ε ε_pos,
+  specialize ha ε ε_pos, cases ha with B B_pf,
+  use B,
+  intros n lower_n,
+  specialize B_pf n lower_n,
+  ring_nf,
+  have abs_lem : ∀ (x : ℝ), |(-x)| = |x|,
+    { /- library_search, -/ exact abs_neg, },
+  rw <- abs_lem,
+  ring_nf,
+  exact B_pf,
+  -- this one you can't do yet because you don't
+  -- know any API for the absolute value function |.|
+  -- More explanation to come on Monday
 end
