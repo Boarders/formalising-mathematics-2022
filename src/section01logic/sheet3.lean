@@ -35,55 +35,57 @@ variables (P Q R : Prop)
 
 example : ¬ true → false :=
 begin
-  sorry
+  intros not_t, apply not_t, triv,
 end
 
 example : false → ¬ true :=
 begin
-  sorry
+  intros f _, exact f,
 end
 
 example : ¬ false → true :=
 begin
-  sorry
+  intros _, triv
 end
 
 example : true → ¬ false :=
 begin
-  sorry
+  intros _ f, exact f,
 end
 
 example : false → ¬ P :=
 begin
-  sorry
+  intros f p, exact f
 end
 
 example : P → ¬ P → false :=
 begin
-  sorry
+  intros p not_p, apply not_p, exact p,
 end
 
 example : P → ¬ (¬ P) :=
 begin
-  sorry
+  intros p, by_contra not_p, apply not_p, exact p,
 end
 
 example : (P → Q) → (¬ Q → ¬ P) :=
 begin
-  sorry
+  intros p_q not_q p, apply not_q, apply p_q, exact p,
 end
 
 example : ¬ ¬ false → false :=
 begin
-  sorry
+  intros not_not_f, by_contra not_f, apply not_not_f, exact not_f
 end
 
 example : ¬ ¬ P → P :=
 begin
-  sorry
+  intros not_not_p, by_contra not_p, apply not_not_p, exact not_p
 end
 
 example : (¬ Q → ¬ P) → (P → Q) :=
 begin
-  sorry,
+  intros notq_notp p, by_contra not_q, apply notq_notp,
+  {exact not_q},
+  {exact p}
 end
