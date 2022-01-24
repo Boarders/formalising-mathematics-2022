@@ -6,7 +6,7 @@ Author : Kevin Buzzard
 
 import tactic -- imports all the Lean tactics
 import data.real.basic -- imports the real numbers
-import solutions.section02reals.sheet5 -- import a bunch of previous stuff
+import section02reals.sheet5 -- import a bunch of previous stuff
 
 /-
 
@@ -23,15 +23,50 @@ you can do. I will go through them all in a solutions video,
 so if you like you can try some of them and then watch me
 solving them.
 
-Good luck! 
+Good luck!
 -/
+example (b : ℝ) (hb : b > 0) : 1 / b > 0 :=
+begin
+  exact one_div_pos.mpr hb,
+end
 
+example : 37 > 0 :=
+begin
+  library_search,
+end
+
+example (a b : ℝ) (ha : a > 0) (hb : b > 0) : a * b > 0 :=
+begin
+  exact mul_pos ha hb,
+end
+
+theorem div_pos_pos {a b : ℝ} (ha : a > 0) (hb : b > 0) : (a / b > 0) :=
+begin
+  have lem : a / b = a * (1 / b),
+  { ring },
+  rw lem, exact mul_pos ha (one_div_pos.mpr hb),
+end
 
 /-- If `a(n)` tends to `t` then `37 * a(n)` tends to `37 * t`-/
 theorem tendsto_thirtyseven_mul (a : ℕ → ℝ) (t : ℝ) (h : tendsto a t) :
   tendsto (λ n, 37 * a n) (37 * t) :=
 begin
-  sorry,
+  intros ε εpos,
+  have lem1 : (ε / 37) > 0,
+    { refine div_pos_pos εpos _, linarith, },
+  specialize h (ε / 37) lem1, cases h with B pf,
+  use B,
+  intros n hn,
+  ring_nf,
+  specialize pf n hn,
+  have lem2 : |37 * a n - 37 * t| = | 37 *  (a n - t) |,
+  { ring_nf,},
+  have lem3 : | 37 * (a n - t) | = 37 * | a n - t |,
+  { rw abs_mul 37 (a n - t), norm_num, },
+  rw lem2, rw lem3,
+  have lem4 : 37 * |a n - t| < ε,
+  { linarith, },
+  exact lem4,
 end
 
 /-- If `a(n)` tends to `t` and `c` is a positive constant then
