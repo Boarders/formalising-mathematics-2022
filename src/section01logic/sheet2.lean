@@ -35,12 +35,12 @@ end
 
 example : true → true :=
 begin
-  intros t, assumption
+  intros, assumption
 end
 
 example : false → true :=
 begin
-  intros _, triv
+  intros h, triv
 end
 
 example : false → false :=
@@ -60,7 +60,7 @@ end
 
 example : true → false → true → false → true → false :=
 begin
-  intros t1 f1 t2 f2 t3, assumption
+  intros, assumption
 end
 
 example : P → ((P → false) → false) :=

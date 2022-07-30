@@ -65,7 +65,9 @@ end
 
 example : P → ¬ (¬ P) :=
 begin
-  intros p, by_contra not_p, apply not_p, exact p,
+--  non-constructive proof by constradiction:
+--  intros p, by_contra not_p, apply not_p, exact p,
+  intros p not_p, apply not_p, exact p
 end
 
 example : (P → Q) → (¬ Q → ¬ P) :=

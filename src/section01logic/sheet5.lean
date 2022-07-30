@@ -36,7 +36,7 @@ end
 
 example : (P ↔ Q) ↔ (Q ↔ P) :=
 begin
-  split; {intros assump; rw assump},
+  split; {intros assump, rw assump},
 end
 
 example : (P ↔ Q) → (Q ↔ R) → (P ↔ R) :=

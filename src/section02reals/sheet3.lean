@@ -50,7 +50,7 @@ Here's the definition of the limit of a sequence.
 /-- If `a(n)` is a sequence of reals and `t` is a real, `tendsto a t`
 is the assertion that the limit of `a(n)` as `n → ∞` is `t`. -/
 def tendsto (a : ℕ → ℝ) (t : ℝ) : Prop :=
-∀ ε > 0, ∃ B : ℕ, ∀ n, B ≤ n → |a n - t| < ε
+  ∀ ε > 0, ∃ B : ℕ, ∀ n, B ≤ n → |a n - t| < ε
 
 /-
 
